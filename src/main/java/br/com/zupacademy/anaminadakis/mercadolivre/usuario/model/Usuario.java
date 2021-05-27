@@ -42,6 +42,10 @@ public class Usuario {
         this.horarioCriacao = LocalDateTime.now();
     }
 
+    @Deprecated
+    public Usuario() {
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +

@@ -22,8 +22,9 @@ public class NovoUsuarioRequest {
         this.senha = senha;
     }
 
-
     public Usuario converter() {
         return new Usuario(email, new Senha(senha));
     }
+
+    public String getEmail() { return email; }
 }
