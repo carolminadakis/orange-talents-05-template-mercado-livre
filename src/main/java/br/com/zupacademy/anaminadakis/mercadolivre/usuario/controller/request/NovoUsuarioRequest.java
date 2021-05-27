@@ -1,5 +1,6 @@
 package br.com.zupacademy.anaminadakis.mercadolivre.usuario.controller.request;
 
+import br.com.zupacademy.anaminadakis.mercadolivre.senha.Senha;
 import br.com.zupacademy.anaminadakis.mercadolivre.usuario.model.Usuario;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,16 +17,13 @@ public class NovoUsuarioRequest {
     @NotBlank @Length(min = 6)
     private String senha;
 
-
-    public String getEmail() {
-        return email;
+    public NovoUsuarioRequest(String email, String senha) {
+        this.email = email;
+        this.senha = senha;
     }
 
-    public String getSenha() {
-        return senha;
-    }
 
     public Usuario converter() {
-        return new Usuario(this.email, this.senha);
+        return new Usuario(email, new Senha(senha));
     }
 }

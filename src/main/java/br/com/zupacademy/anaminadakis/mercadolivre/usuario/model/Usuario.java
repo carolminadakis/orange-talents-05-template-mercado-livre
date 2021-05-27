@@ -1,6 +1,10 @@
 package br.com.zupacademy.anaminadakis.mercadolivre.usuario.model;
 
+import br.com.zupacademy.anaminadakis.mercadolivre.senha.Senha;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,14 +27,19 @@ public class Usuario {
     private String email;
 
     @NotBlank @Length(min = 6)
-    private String senha;
+    private String senhaUsuario;
 
     @NotNull
     private LocalDateTime horarioCriacao = LocalDateTime.now();
 
-    public Usuario(String email, String senha) {
+
+    public Usuario(String email, Senha senha) {
+        Assert.isTrue(StringUtils.hasLength(email),"email não pode ser em branco");
+        Assert.notNull(senha,"senha não pode ser nula");
+
         this.email = email;
-        this.senha = senha;
+        this.senhaUsuario = senha.hash();
+        this.horarioCriacao = LocalDateTime.now();
     }
 
     @Override
@@ -38,7 +47,7 @@ public class Usuario {
         return "Usuario{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
+                ", senha='" + senhaUsuario + '\'' +
                 ", horarioCriacao=" + horarioCriacao +
                 '}';
     }
