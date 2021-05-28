@@ -28,17 +28,6 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public Categoria getCategoriaMae() {
-        return categoriaMae;
-    }
 
     @Override
     public String toString() {

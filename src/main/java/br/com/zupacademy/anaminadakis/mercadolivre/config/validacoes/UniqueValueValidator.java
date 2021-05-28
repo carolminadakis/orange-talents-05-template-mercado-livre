@@ -1,4 +1,4 @@
-package br.com.zupacademy.anaminadakis.mercadolivre.config;
+package br.com.zupacademy.anaminadakis.mercadolivre.config.validacoes;
 
 import org.springframework.util.Assert;
 

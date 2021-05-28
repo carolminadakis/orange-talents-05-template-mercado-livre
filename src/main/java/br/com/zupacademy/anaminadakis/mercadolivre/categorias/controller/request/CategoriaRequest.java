@@ -2,8 +2,8 @@ package br.com.zupacademy.anaminadakis.mercadolivre.categorias.controller.reques
 
 import br.com.zupacademy.anaminadakis.mercadolivre.categorias.model.Categoria;
 import br.com.zupacademy.anaminadakis.mercadolivre.categorias.repository.CategoriaRepository;
-import br.com.zupacademy.anaminadakis.mercadolivre.config.ExistsId;
-import br.com.zupacademy.anaminadakis.mercadolivre.config.UniqueValue;
+import br.com.zupacademy.anaminadakis.mercadolivre.config.validacoes.ExistsId;
+import br.com.zupacademy.anaminadakis.mercadolivre.config.validacoes.UniqueValue;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.NotBlank;
