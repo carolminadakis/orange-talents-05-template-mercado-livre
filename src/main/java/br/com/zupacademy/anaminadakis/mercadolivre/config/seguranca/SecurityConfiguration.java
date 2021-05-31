@@ -4,7 +4,6 @@ import br.com.zupacademy.anaminadakis.mercadolivre.usuario.repository.UsuarioRep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity  //abilita o modo de segurança na aplicação
 @Configuration      //por ser uma classe de configurações, precisamos anotá-la com Configuration
-@Profile (value = {"prod", "test"})  //essa anotação assegura que a camada de segurança do spring só ative no ambiente de produção
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -33,12 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/categorias").permitAll()    //permite a requisição de listagem
-                .antMatchers(HttpMethod.POST, "/usuarios").permitAll()                  //permite a requisição de pesquisa por id
-                .antMatchers(HttpMethod.GET, "/categorias/**").permitAll()              //permite a requisição para a autenticação
-                .antMatchers(HttpMethod.POST, "/api/auth").permitAll()              //permite a requisição para a actuator
-                .anyRequest().authenticated()
-                .and()
-                    .cors()
+                .antMatchers(HttpMethod.GET, "/categorias/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers("/h2-console/**").permitAll()  //permite o acesso ao h2
+                .anyRequest().authenticated()   //qualquer outra requisição tem que estar autenticado
+                .and().cors()
                 .and()
                     .csrf().disable()
                 .sessionManagement()
@@ -51,13 +49,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
-        //esse método faz a autenticação do login e o algoritmo seguro da senha (hash da senha) através do BCrypt
+        //esse método avisa ao Spring qual a classe que tem a lógica de autenticação
     }
 
     //Configuracoes de recursos estaticos(js, css, imagens, etc.)
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
+        web.ignoring()
+                .antMatchers("/**.html");
     }
 
     @Override

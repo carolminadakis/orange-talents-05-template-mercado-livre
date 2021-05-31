@@ -1,25 +1,23 @@
 package br.com.zupacademy.anaminadakis.mercadolivre.usuario.model;
 
-import br.com.zupacademy.anaminadakis.mercadolivre.senha.Senha;
+
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 public class Usuario implements UserDetails {
+//A classe UserDetalis comunica ao Spring Security, que essa é a nossa classe que tem os detalhes do usuário no banco de dados
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,19 +28,24 @@ public class Usuario implements UserDetails {
     private String email;
 
     @NotBlank @Length(min = 6)
-    private String senhaUsuario;
+    private String senha;
 
     @NotNull
     private LocalDateTime horarioCriacao = LocalDateTime.now();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Perfil> perfis = new ArrayList<>();
+    //a relação ManyToMany é Lazy, isso significa que a lista não é carregada automaticamente,
+    //como vamos precisar dessa lista, iremos configurar como EAGER, dessa forma a lista será gerada sempre
 
-    public Usuario(String email, Senha senha) {
-        Assert.isTrue(StringUtils.hasLength(email),"email não pode ser em branco");
-        Assert.notNull(senha,"senha não pode ser nula");
 
+    public Usuario(String email, String senha) {
         this.email = email;
-        this.senhaUsuario = senha.hash();
-        this.horarioCriacao = LocalDateTime.now();
+        this.senha = new BCryptPasswordEncoder().encode(senha);
+    }
+
+    @Deprecated
+    public Usuario() {
     }
 
     @Override
@@ -63,46 +66,51 @@ public class Usuario implements UserDetails {
         return result;
     }
 
-    @Deprecated
-    public Usuario() {
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", horarioCriacao=" + horarioCriacao +
+                ", perfis=" + perfis +
+                '}';
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.perfis;
     }
 
     @Override
     public String getPassword() {
-        return null;
-    }
+        return this.senha;
+    }   //devolve a senha
 
     @Override
     public String getUsername() {
-        return null;
-    }
+        return this.email;
+    }   //devolve o email
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

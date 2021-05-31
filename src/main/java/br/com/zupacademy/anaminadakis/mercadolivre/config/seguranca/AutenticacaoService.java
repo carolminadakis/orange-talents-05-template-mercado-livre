@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {        // a implementação avisa ao Spring que essa é a classe de Autenticação
+//quando a pessoa clicar para logar, o Spring chama essa service AutenticacaoService
 
     @Autowired
     private UsuarioRepository usuarioRepository;

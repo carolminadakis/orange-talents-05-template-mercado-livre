@@ -25,7 +25,7 @@ public class TokenService {
 
             return Jwts.builder()
                     .setIssuer("API do Mercado Livre")
-                    .setSubject(logado.getId().toString())
+                    .setSubject(logado.getId().toString())  //identifica o usuário
                     .setIssuedAt(hoje)
                     .setExpiration(dataExpiracao)
                     .signWith(SignatureAlgorithm.HS256, secret)

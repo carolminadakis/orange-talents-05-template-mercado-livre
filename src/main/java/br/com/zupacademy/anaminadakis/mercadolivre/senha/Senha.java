@@ -1,3 +1,4 @@
+/*
 package br.com.zupacademy.anaminadakis.mercadolivre.senha;
 
 import org.hibernate.validator.constraints.Length;
@@ -22,3 +23,4 @@ public class Senha {
         return new BCryptPasswordEncoder().encode(senha);
     }
 }
+*/

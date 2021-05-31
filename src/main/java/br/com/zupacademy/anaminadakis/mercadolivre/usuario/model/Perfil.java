@@ -8,7 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class PerfilUsuario implements GrantedAuthority {
+public class Perfil implements GrantedAuthority {
+//A interface GrantedAuthority comunica o Spring que essa é a classe que representa o perfil de acesso
 
     private static final long serialVersionUID = 1L;
 
@@ -18,20 +19,16 @@ public class PerfilUsuario implements GrantedAuthority {
 
     private String nome;
 
+    public Perfil(String nome) {
+        this.nome = nome;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNome() {
         return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     @Override
