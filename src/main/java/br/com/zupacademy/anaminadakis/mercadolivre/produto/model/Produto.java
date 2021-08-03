@@ -1,6 +1,7 @@
 package br.com.zupacademy.anaminadakis.mercadolivre.produto.model;
 
 import br.com.zupacademy.anaminadakis.mercadolivre.categorias.model.Categoria;
+import br.com.zupacademy.anaminadakis.mercadolivre.imagens.model.ImagemProduto;
 import br.com.zupacademy.anaminadakis.mercadolivre.produto.request.CaracteristicaRequest;
 import br.com.zupacademy.anaminadakis.mercadolivre.usuario.model.Usuario;
 import org.hibernate.validator.constraints.Length;
@@ -12,7 +13,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -57,6 +57,9 @@ public class Produto {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<Caracteristica> caracteristicas = new HashSet<>();
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
+
     @Deprecated
     public Produto() {
     }
@@ -87,10 +90,18 @@ public class Produto {
                 ", preco=" + preco +
                 ", quantidadeDisponivel=" + quantidadeDisponivel +
                 ", descricao='" + descricao + '\'' +
-                ", instanteCadastro=" + instanteCadastro.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +
+                ", instanteCadastro=" + instanteCadastro +
                 ", categoria=" + categoria +
                 ", vendedor=" + vendedor +
                 ", caracteristicas=" + caracteristicas +
+                ", imagens=" + imagens +
                 '}';
+    }
+
+    public void associaImagens(Set<String> links) {
+        Set<ImagemProduto> imagens = links.stream()
+                .map(link -> new ImagemProduto(this, link))
+                .collect(Collectors.toSet());
+        this.imagens.addAll(imagens);
     }
 }

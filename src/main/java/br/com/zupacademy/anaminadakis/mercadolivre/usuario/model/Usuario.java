@@ -55,14 +55,16 @@ public class Usuario implements UserDetails {
 
         Usuario usuario = (Usuario) o;
 
-        if (!id.equals(usuario.id)) return false;
-        return email.equals(usuario.email);
+        if (!getId().equals(usuario.getId())) return false;
+        if (!email.equals(usuario.email)) return false;
+        return senha.equals(usuario.senha);
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
+        int result = getId().hashCode();
         result = 31 * result + email.hashCode();
+        result = 31 * result + senha.hashCode();
         return result;
     }
 
