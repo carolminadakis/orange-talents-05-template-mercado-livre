@@ -104,4 +104,17 @@ public class Produto {
                 .collect(Collectors.toSet());
         this.imagens.addAll(imagens);
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public Usuario getVendedor() {
+        return vendedor;
+    }
+
+    public String getEmailDoVendedor() {
+        return this.vendedor.getUsername();
+    }
+
 }
