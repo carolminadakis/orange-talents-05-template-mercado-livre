@@ -2,6 +2,8 @@ package br.com.zupacademy.anaminadakis.mercadolivre.produto.model;
 
 import br.com.zupacademy.anaminadakis.mercadolivre.categorias.model.Categoria;
 import br.com.zupacademy.anaminadakis.mercadolivre.imagens.model.ImagemProduto;
+import br.com.zupacademy.anaminadakis.mercadolivre.opiniao.model.Opiniao;
+import br.com.zupacademy.anaminadakis.mercadolivre.pergunta.model.Pergunta;
 import br.com.zupacademy.anaminadakis.mercadolivre.produto.request.CaracteristicaRequest;
 import br.com.zupacademy.anaminadakis.mercadolivre.usuario.model.Usuario;
 import org.hibernate.validator.constraints.Length;
@@ -13,9 +15,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -34,11 +34,13 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    @NotNull @Positive
+    @NotNull
+    @Positive
     @Column(nullable = false)
     private int quantidadeDisponivel;
 
-    @NotBlank @Length(max = 1000)
+    @NotBlank
+    @Length(max = 1000)
     @Column(nullable = false)
     private String descricao;
 
@@ -59,6 +61,13 @@ public class Produto {
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
     private Set<ImagemProduto> imagens = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "produto")
+    private List<Opiniao> opinioes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "produto")
+    private List<Pergunta> perguntas = new ArrayList<>();
 
     @Deprecated
     public Produto() {
@@ -116,5 +125,66 @@ public class Produto {
     public String getEmailDoVendedor() {
         return this.vendedor.getUsername();
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public int getQuantidadeDisponivel() {
+        return quantidadeDisponivel;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public LocalDateTime getInstanteCadastro() {
+        return instanteCadastro;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public Set<Caracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public Set<ImagemProduto> getImagens() {
+        return imagens;
+    }
+
+    public int getTotalOpinioes() {
+        return opinioes.size();
+    }
+
+    public List<Opiniao> getOpinioes() {
+        return opinioes;
+    }
+
+    public List<Pergunta> getPerguntas() {
+        return perguntas;
+    }
+
+    public BigDecimal getMediaNotas() {
+//rebebe as notas dadas em todas as opiniões, e devolve uma collection
+        List<Integer> notas = this.opinioes
+                .stream()
+                .map(opiniao -> opiniao.getNota())
+                .collect(Collectors.toList());
+//soma todas as notas recebidas
+        Integer totalNotas = 0;
+        for (int nota : notas) {
+            totalNotas += nota;
+        }
+        Integer tamanhoLista = notas.size();
+
+        return BigDecimal.valueOf(totalNotas).divide(BigDecimal.valueOf(tamanhoLista));
+    }
+
 
 }
