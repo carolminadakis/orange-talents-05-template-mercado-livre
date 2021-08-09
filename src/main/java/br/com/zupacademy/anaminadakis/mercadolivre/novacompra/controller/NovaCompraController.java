@@ -1,5 +1,6 @@
 package br.com.zupacademy.anaminadakis.mercadolivre.novacompra.controller;
 
+import br.com.zupacademy.anaminadakis.mercadolivre.novacompra.fechamentocompra.EventosNovaCompra;
 import br.com.zupacademy.anaminadakis.mercadolivre.novacompra.gateway.GatewayPagamento;
 import br.com.zupacademy.anaminadakis.mercadolivre.novacompra.model.Compra;
 import br.com.zupacademy.anaminadakis.mercadolivre.novacompra.repository.CompraRepository;
@@ -29,6 +30,8 @@ public class NovaCompraController {
     private ProdutoRepository produtoRepository;
     @Autowired
     CompraRepository compraRepository;
+    @Autowired
+    EventosNovaCompra eventosNovaCompra;
 
 
     @PostMapping
@@ -47,6 +50,7 @@ public class NovaCompraController {
             GatewayPagamento gateway = request.getMeioDePagamento();
             Compra novaCompra = new Compra(produtoAserComprado, quatidade, usuario, gateway);
             compraRepository.save(novaCompra);
+            eventosNovaCompra.processa(novaCompra);
 
             if (gateway.equals(GatewayPagamento.PAGSEGURO)) {
                 UriComponents urlRetornoPagseguro = builder.path("/retorno-pagseguro/{id}").buildAndExpand(novaCompra.getId().toString());
