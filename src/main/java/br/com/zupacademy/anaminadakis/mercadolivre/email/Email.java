@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Email {
 
+
     private final EnviadorDeEmail enviadorDeEmailFake;
 
     public Email(EnviadorDeEmail enviadorDeEmailFake) {

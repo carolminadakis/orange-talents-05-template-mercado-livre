@@ -186,5 +186,11 @@ public class Produto {
         return BigDecimal.valueOf(totalNotas).divide(BigDecimal.valueOf(tamanhoLista));
     }
 
-
+    public boolean abateEstoque(@Positive int quantidade) {
+        if(this.quantidadeDisponivel >= quantidade) {
+            this.quantidadeDisponivel -= quantidade;
+            return true;
+        }
+        return false;
+    }
 }
